@@ -458,9 +458,16 @@
 				]
 			},
 			{
-				"name": "Web1",
+				"name": "Send Email upon Completion",
 				"type": "WebActivity",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "JoinAndAggregateData",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
