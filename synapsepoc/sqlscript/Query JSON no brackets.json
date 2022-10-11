@@ -1,0 +1,17 @@
+{
+	"name": "Query JSON no brackets",
+	"properties": {
+		"content": {
+			"query": "select  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded\nfrom openrowset(\n        bulk 'https://brnsxttxiolnburipoc.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
