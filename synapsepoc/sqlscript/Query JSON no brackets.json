@@ -2,7 +2,7 @@
 	"name": "Query JSON no brackets",
 	"properties": {
 		"content": {
-			"query": "select  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded\nfrom openrowset(\n        bulk 'https://brnsxttxiolnburipoc.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+			"query": "select  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'https://brnsxttxiolnburipoc.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
 			"metadata": {
 				"language": "sql"
 			},

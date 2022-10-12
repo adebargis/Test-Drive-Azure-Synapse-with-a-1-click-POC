@@ -1,0 +1,17 @@
+{
+	"name": "CREATE DB",
+	"properties": {
+		"content": {
+			"query": "CREATE DATABASE cok_db",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
