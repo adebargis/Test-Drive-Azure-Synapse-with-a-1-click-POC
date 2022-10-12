@@ -1334,6 +1334,46 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/CETAS JSON')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "drop schema cok_db\ndrop external data source json_data\ndrop external file format parquet_format\ngo\ncreate schema cok_db\ngo\ncreate external data source json_data\nwith ( location = 'https://brnsxttxiolnburipoc.blob.core.windows.net/test',\n    CREDENTIAL = WorkspaceIdentity );\ngo\nCREATE EXTERNAL FILE FORMAT parquet_format  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );\ngo\ncreate external table cok_db.json_table\n    with (\n        LOCATION = 'tab_format/',\n        DATA_SOURCE = json_data,\n        FILE_FORMAT = parquet_format\n    )\nas\nselect  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'dboBCAPWORKLOAD.txt',\n        data_source = 'json_data',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "cok_db",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/CREATE DB')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE DATABASE cok_db",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Query JSON no brackets')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1354,7 +1394,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 1')]",
+			"name": "[concat(parameters('workspaceName'), '/Simple query - no data source')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1365,6 +1405,26 @@
 					},
 					"currentConnection": {
 						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/create credentials')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<>'\nCREATE DATABASE SCOPED CREDENTIAL WorkspaceIdentity WITH IDENTITY = 'Managed Identity'",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "cok_db",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -1757,18 +1817,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/brnsxttxiolnburipocws1p1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "canadacentral"
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/ws1sparkpool1')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
@@ -1794,6 +1842,18 @@
 			"location": "canadacentral"
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/brnsxttxiolnburipocws1p1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "canadacentral"
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/default')]",
 			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks",
 			"apiVersion": "2019-06-01-preview",
@@ -1801,72 +1861,12 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/CETAS JSON')]",
+			"name": "[concat(parameters('workspaceName'), '/QUERY TABLE AFTER CETAS')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "drop schema cok_db\ndrop external data source json_data\ndrop external file format parquet_format\ngo\ncreate schema cok_db\ngo\ncreate external data source json_data\nwith ( location = 'https://brnsxttxiolnburipoc.blob.core.windows.net/test',\n    CREDENTIAL = WorkspaceIdentity );\ngo\nCREATE EXTERNAL FILE FORMAT parquet_format  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );\ngo\ncreate external table cok_db.json_table\n    with (\n        LOCATION = 'tab_format/',\n        DATA_SOURCE = json_data,\n        FILE_FORMAT = parquet_format\n    )\nas\nselect  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'dboBCAPWORKLOAD.txt',\n        data_source = 'json_data',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "cok_db",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/CREATE DB')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "CREATE DATABASE cok_db",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "master",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "CREATE EXTERNAL FILE FORMAT file_format_name  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "cok_db",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/create credentials')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "CREATE MASTER KEY ENCRYPTION BY PASSWORD = '<>'\nCREATE DATABASE SCOPED CREDENTIAL WorkspaceIdentity WITH IDENTITY = 'Managed Identity'",
+					"query": "SELECT * FROM cok_db.json_table WHERE rec_ful_nam = 'RROCHEFORT'",
 					"metadata": {
 						"language": "sql"
 					},
