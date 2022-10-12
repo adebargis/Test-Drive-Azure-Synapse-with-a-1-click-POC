@@ -1,0 +1,17 @@
+{
+	"name": "QUERY TABLE AFTER CETAS",
+	"properties": {
+		"content": {
+			"query": "SELECT * FROM cok_db.json_table WHERE rec_ful_nam = 'RROCHEFORT'",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "cok_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
