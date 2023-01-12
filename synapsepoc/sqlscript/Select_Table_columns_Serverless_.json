@@ -1,0 +1,17 @@
+{
+	"name": "Select_Table_columns_Serverless_",
+	"properties": {
+		"content": {
+			"query": "select ",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "serverless_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
