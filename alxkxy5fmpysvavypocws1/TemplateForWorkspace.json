@@ -1392,12 +1392,12 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "drop schema cok_db\ndrop external data source json_data\ndrop external file format parquet_format\ngo\ncreate schema cok_db\ngo\ncreate external data source json_data\nwith ( location = 'https://brnsxttxiolnburipoc.blob.core.windows.net/test',\n    CREDENTIAL = WorkspaceIdentity );\ngo\nCREATE EXTERNAL FILE FORMAT parquet_format  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );\ngo\ncreate external table cok_db.json_table\n    with (\n        LOCATION = 'tab_format/',\n        DATA_SOURCE = json_data,\n        FILE_FORMAT = parquet_format\n    )\nas\nselect  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'dboBCAPWORKLOAD.txt',\n        data_source = 'json_data',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+					"query": "create schema cok_db\ngo\ncreate external data source json_data\nwith ( location = 'https://alxkxy5fmpysvavypocws1.blob.core.windows.net/test',\n    CREDENTIAL = WorkspaceIdentity );\ngo\nCREATE EXTERNAL FILE FORMAT parquet_format  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );\ngo\ncreate external table cok_db.json_table\n    with (\n        LOCATION = 'tab_format/',\n        DATA_SOURCE = json_data,\n        FILE_FORMAT = parquet_format\n    )\nas\nselect  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'dboBCAPWORKLOAD.txt',\n        data_source = 'json_data',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "cok_db",
+						"databaseName": "serverless_db",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -1467,17 +1467,57 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Select_Table_Serverless')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select * from dbo.fares",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "serverless_db",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Select_Table_columns_Serverless_')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "select vendor_id, payment_type, total_amount from dbo.fares",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "serverless_db",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Simple query - no data source')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"content": {
-					"query": "select top 10 *\nfrom openrowset(\n        bulk 'https://brnsxttxiolnburipoc.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+					"query": "select top 10 *\nfrom openrowset(\n        bulk 'https://alxkxy5fmpysvavypocws1.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
 					"metadata": {
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "master",
+						"databaseName": "serverless_db",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -1497,7 +1537,7 @@
 						"language": "sql"
 					},
 					"currentConnection": {
-						"databaseName": "cok_db",
+						"databaseName": "serverless_db",
 						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
@@ -1528,7 +1568,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e7504ef1-9a9f-45e0-80e1-5506f0eb6857"
+						"spark.autotune.trackingId": "5c72d360-4fb9-462b-8d8d-b81af2e878da"
 					}
 				},
 				"metadata": {
@@ -1553,15 +1593,13 @@
 						"sparkVersion": "2.4",
 						"nodeCount": 5,
 						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"# Predict NYC Taxi Tips using Spark ML and Azure Open Datasets\n",
 							"\n",
@@ -1574,7 +1612,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import matplotlib.pyplot as plt\n",
 							"\n",
@@ -1597,7 +1634,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Ingest Data¶ \n",
 							"\n",
@@ -1606,7 +1642,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"# Import NYC yellow cab data from Azure Open Datasets\n",
 							"from azureml.opendatasets import NycTlcYellow\n",
@@ -1625,7 +1660,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"#To make development easier, faster and less expensive downsample for now\n",
 							"sampled_taxi_df = nyc_tlc_df.sample(True, 0.001, seed=1234)"
@@ -1635,7 +1669,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Exploratory Data Analysis\n",
 							"\n",
@@ -1644,7 +1677,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"#The charting package needs a Pandas dataframe or numpy array do the conversion\n",
 							"sampled_taxi_pd_df = sampled_taxi_df.toPandas()\n",
@@ -1679,7 +1711,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Data Prep and Featurization\n",
 							"\n",
@@ -1691,7 +1722,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"taxi_df = sampled_taxi_df.select('totalAmount', 'fareAmount', 'tipAmount', 'paymentType', 'rateCodeId', 'passengerCount'\\\n",
 							"                                , 'tripDistance', 'tpepPickupDateTime', 'tpepDropoffDateTime'\\\n",
@@ -1714,7 +1744,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Data Prep and Featurization Part 2\n",
 							"\n",
@@ -1726,7 +1755,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"taxi_featurised_df = taxi_df.select('totalAmount', 'fareAmount', 'tipAmount', 'paymentType', 'passengerCount'\\\n",
 							"                                                , 'tripDistance', 'weekdayString', 'pickupHour','tripTimeSecs','tipped'\\\n",
@@ -1743,7 +1771,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Encoding\n",
 							"\n",
@@ -1757,7 +1784,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"# The sample uses an algorithm that only works with numeric features convert them so they can be consumed\n",
 							"sI1 = StringIndexer(inputCol=\"trafficTimeBins\", outputCol=\"trafficTimeBinsIndex\"); \n",
@@ -1773,7 +1799,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Generation of Testing and Training Data Sets\n",
 							"Simple split, 70% for training and 30% for testing the model. Playing with this ratio may result in different models.\n",
@@ -1782,7 +1807,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"# Decide on the split between training and testing data from the dataframe \n",
 							"trainingFraction = 0.7\n",
@@ -1797,7 +1821,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Train the Model\n",
 							"\n",
@@ -1806,7 +1829,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"## Create a new LR object for the model\n",
 							"logReg = LogisticRegression(maxIter=10, regParam=0.3, labelCol = 'tipped')\n",
@@ -1834,7 +1856,6 @@
 					},
 					{
 						"cell_type": "markdown",
-						"metadata": {},
 						"source": [
 							"## Evaluate and Visualize\n",
 							"\n",
@@ -1844,7 +1865,6 @@
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"## Plot the ROC curve, no need for pandas as this uses the modelSummary object\n",
 							"modelSummary = lrModel.stages[-1].summary\n",
@@ -1880,7 +1900,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "dc1f6d49-0421-48c6-a9d9-cb2efec77a78"
+						"spark.autotune.trackingId": "19270596-769e-404e-8771-f2121ce3f3ad"
 					}
 				},
 				"metadata": {
@@ -1898,7 +1918,6 @@
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"%%pyspark\n",
 							"spark.sql(\"CREATE TABLE IF NOT EXISTS default.YourTableName USING Parquet LOCATION 'YourFilePath'\")"
@@ -1925,7 +1944,7 @@
 					"minNodeCount": 3
 				},
 				"nodeCount": 5,
-				"nodeSize": "Small",
+				"nodeSize": "Medium",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "2.4",
 				"isComputeIsolationEnabled": false,
@@ -1983,46 +2002,6 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Select_Table_Serverless')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "select vendor_id, payment_type, total_amount from dbo.fares",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "serverless_db",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Select_Table_columns_Serverless_')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "select ",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "serverless_db",
-						"poolName": "Built-in"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
 		}
 	]
 }
