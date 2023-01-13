@@ -529,7 +529,7 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"url": "https://prod-11.canadacentral.logic.azure.com:443/workflows/02e533e1eea64a57afd9c24e196719af",
+							"url": "https://prod-14.canadacentral.logic.azure.com:443/workflows/a34663bc4cf845af93ffb4f3eb4aef51/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kpIwk5lQMdssVB89Mmt6Z3Z3PmsPgvSvBlWEw5EeIok",
 							"connectVia": {
 								"referenceName": "AutoResolveIntegrationRuntime",
 								"type": "IntegrationRuntimeReference"
@@ -537,7 +537,7 @@
 							"method": "POST",
 							"headers": {},
 							"body": {
-								"value": "{\n    \"message\" : \"This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"@{pipeline().parameters.receiver}\",\n    \"api-version\" \"08585279648127165190\"\n}",
+								"value": "{\n    \"message\" : \"This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"@{pipeline().parameters.receiver}\"\n}",
 								"type": "Expression"
 							}
 						}
