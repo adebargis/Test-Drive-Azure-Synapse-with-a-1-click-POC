@@ -2,12 +2,12 @@
 	"name": "Simple query - no data source",
 	"properties": {
 		"content": {
-			"query": "select top 10 *\nfrom openrowset(\n        bulk 'https://brnsxttxiolnburipoc.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+			"query": "select top 10 *\nfrom openrowset(\n        bulk 'https://alxkxy5fmpysvavypocws1.blob.core.windows.net/test/dboBCAPWORKLOAD.txt',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "serverless_db",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000

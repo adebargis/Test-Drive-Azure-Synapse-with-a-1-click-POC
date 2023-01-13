@@ -2,12 +2,12 @@
 	"name": "CETAS JSON",
 	"properties": {
 		"content": {
-			"query": "drop schema cok_db\ndrop external data source json_data\ndrop external file format parquet_format\ngo\ncreate schema cok_db\ngo\ncreate external data source json_data\nwith ( location = 'https://brnsxttxiolnburipoc.blob.core.windows.net/test',\n    CREDENTIAL = WorkspaceIdentity );\ngo\nCREATE EXTERNAL FILE FORMAT parquet_format  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );\ngo\ncreate external table cok_db.json_table\n    with (\n        LOCATION = 'tab_format/',\n        DATA_SOURCE = json_data,\n        FILE_FORMAT = parquet_format\n    )\nas\nselect  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'dboBCAPWORKLOAD.txt',\n        data_source = 'json_data',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
+			"query": "create schema cok_db\ngo\ncreate external data source json_data\nwith ( location = 'https://alxkxy5fmpysvavypocws1.blob.core.windows.net/test',\n    CREDENTIAL = WorkspaceIdentity );\ngo\nCREATE EXTERNAL FILE FORMAT parquet_format  \nWITH (  \n    FORMAT_TYPE = PARQUET  \n    );\ngo\ncreate external table cok_db.json_table\n    with (\n        LOCATION = 'tab_format/',\n        DATA_SOURCE = json_data,\n        FILE_FORMAT = parquet_format\n    )\nas\nselect  JSON_VALUE(doc, '$.SERV_PROV_CODE') AS provider_code,\n        JSON_VALUE(doc, '$.B1_PER_ID1') AS b1_per_id1,\n        JSON_VALUE(doc, '$.B1_PER_ID2') AS b1_per_id2,\n        JSON_VALUE(doc, '$.B1_PER_ID3') AS b1_per_id3,\n        JSON_VALUE(doc, '$.WORKLOAD_POINTS') AS wrkld_pts,\n        JSON_VALUE(doc, '$.REC_DATE') AS date_recorded,\n        JSON_VALUE(doc, '$.REC_FUL_NAM') AS rec_ful_nam,\n        JSON_VALUE(doc, '$.REC_STATUS') AS rec_status\nfrom openrowset(\n        bulk 'dboBCAPWORKLOAD.txt',\n        data_source = 'json_data',\n        format = 'csv',\n        fieldterminator ='0x0b',\n        fieldquote = '0x0b'\n    ) with (doc nvarchar(max)) as rows",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "cok_db",
+				"databaseName": "serverless_db",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000

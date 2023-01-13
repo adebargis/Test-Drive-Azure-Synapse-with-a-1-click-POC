@@ -2,7 +2,7 @@
 	"name": "Select_Table_Serverless",
 	"properties": {
 		"content": {
-			"query": "select vendor_id, payment_type, total_amount from dbo.fares",
+			"query": "select * from dbo.fares",
 			"metadata": {
 				"language": "sql"
 			},
